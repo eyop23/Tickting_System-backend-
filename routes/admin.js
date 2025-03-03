@@ -8,7 +8,7 @@ const {
 
 const router = express.Router();
 
-router.post("/tickets", authenticate, createTicket);
+// router.post("/tickets", authenticate, createTicket);
 router.get("/tickets", authenticate, getTickets);
 router.put("/tickets/:id", authenticate, isAdmin, updateTicket);
 

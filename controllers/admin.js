@@ -27,6 +27,8 @@ exports.getTickets = async (req, res) => {
 
 exports.updateTicket = async (req, res) => {
   try {
+    console.log(req.body)
+    console.log(req.params)
     const { status } = req.body;
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) return res.status(404).json({ message: "Ticket not found" });

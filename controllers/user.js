@@ -1,7 +1,44 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Ticket = require("../models/Ticket");
 
+exports.createTicket = async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    const ticket = new Ticket({ user: req.user.id, title, description });
+    await ticket.save();
+    res.status(201).json(ticket);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+exports.getMe = async (req, res) => {
+  const user = req.user;
+  res.json({
+    sucess: true,
+    user,
+  });
+};
+exports.getTickets = async (req, res) => {
+  try {
+    let tickets;
+    // if (req.user.role === "admin") {
+    //   tickets = await Ticket.find({ user: req.user.id }).populate(
+    //     "user",
+    //     "name email"
+    //   );
+    // } else {
+    tickets = await Ticket.find({ user: req.user.id }).populate(
+      "user",
+      "name email"
+    );
+    // }
+    res.json(tickets);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 exports.signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -19,7 +56,13 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
+exports.getAllUsers = async (req, res) => {
+  const user = await User.find();
+  res.json({
+    success: true,
+    user,
+  });
+};
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
