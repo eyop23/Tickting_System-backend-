@@ -12,7 +12,7 @@ const { authenticate, isAdmin } = require("../middlewares/auth");
 const router = express.Router();
 router.post("/signup", signup);
 router.post("/login", login);
-router.get("/", getAllUsers);
+router.get("/", authenticate, isAdmin, getAllUsers);
 router.delete("/", deleteAllUsers);
 router.get("/profile", authenticate, getMe);
 router.get("/own_tickets", authenticate, getTickets);

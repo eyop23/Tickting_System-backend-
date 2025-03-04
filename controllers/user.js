@@ -56,12 +56,23 @@ exports.signup = async (req, res) => {
   }
 };
 exports.getAllUsers = async (req, res) => {
-  const user = await User.find();
-  res.json({
-    success: true,
-    user,
-  });
+  try {
+    // Find all users except those with the role 'admin'
+    const users = await User.find({
+      _id: { $ne: req.user.id },
+      role: { $ne: "admin" },
+    });
+
+    res.json({
+      success: true,
+      user: users,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch users" });
+  }
 };
+
 exports.deleteAllUsers = async (req, res) => {
   const users = await User.deleteMany();
   res.json(users);
