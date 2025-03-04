@@ -24,11 +24,15 @@ exports.getTickets = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.deleteTickets = async (req, res) => {
+  const tickets = await Ticket.deleteMany();
+  res.json(tickets);
+};
 
 exports.updateTicket = async (req, res) => {
   try {
-    console.log(req.body)
-    console.log(req.params)
+    console.log(req.body);
+    console.log(req.params);
     const { status } = req.body;
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) return res.status(404).json({ message: "Ticket not found" });

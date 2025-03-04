@@ -41,14 +41,13 @@ exports.getTickets = async (req, res) => {
 };
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
-    if (req.body.role) user.role = req.body.role;
+    const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -62,6 +61,10 @@ exports.getAllUsers = async (req, res) => {
     success: true,
     user,
   });
+};
+exports.deleteAllUsers = async (req, res) => {
+  const users = await User.deleteMany();
+  res.json(users);
 };
 exports.login = async (req, res) => {
   try {
