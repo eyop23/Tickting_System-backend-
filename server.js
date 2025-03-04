@@ -15,14 +15,19 @@ const app = express();
 
 // Connect to the database
 connectDB();
-const corsOptions = {
-  origin: "*", // Allow all origins
-  methods: "GET,POST,PUT,DELETE", // Allowed methods
-  credentials: true, // Allow credentials like cookies to be sent
-};
-
+app.use(cors({
+  origin: function(origin, callback) {
+    if (origin === 'https://ticketing-system-henna.vercel.app' || origin === 'http://localhost:5173') {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS')); // Reject other origins
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+}));
 // Enable CORS with the specified options
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(bodyParser.json()); // To parse JSON bodies
 app.use(loggerMiddleware);
 app.use("/uploads", express.static("uploads"));
